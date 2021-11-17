@@ -1,7 +1,6 @@
 **------------------------------------------------------------------------------*/
-/* 	Project: 		Co-Twin Control Study of Physical Activity, Resilience, & 
-					Symptoms of Depression & Anxiety During the COVID-19 Pandemic Repsonse 
-					------------------------------------------------------------
+/* 	Project: 		Co-Twin Control Study of Physical Activity & Depression Sx during COVID-19 Pandemic Repsonse 
+				------------------------------------------------------------
 	Analyst:		Julia Caruana
 **------------------------------------------------------------------------------*/
 
