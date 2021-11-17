@@ -5,14 +5,7 @@
 	Analyst:		Julia Caruana
 **------------------------------------------------------------------------------*/
 
-
-
-** LOAD DIRECTORY INSTRUCTIONS
-
-
-
-
-
+** LOAD DIRECTORY
 
 /*---------------------------------------------------------------------------------------
 	DEMOGRAPHIC DESCRIPTIVES
@@ -47,8 +40,6 @@
 	label define same_sex_label 1 "Same sex pair" 0 "Different sex pair" 
 	label values same_sex same_sex_label 
 *----------------------------------------------------------------------------------------*/
-
-
 
 /*---------------------------------------------------------------------------------------
 	CLEAN: Location of Participant at time of responding
@@ -212,9 +203,6 @@ Aim: 	1. Clean state and postcode variables.
 	label values country_clean country_clean_label 
 	* tab country_clean		// 43 (2.74%) reported not living in Australia at time of responding
 *==========================================================================================*/	
-
-
-
 
 *==========================================================================================*/
 *	APPLY SAMPLE EXCLUSIONS
@@ -453,8 +441,6 @@ gen metro_melb =.
 *---------------------------------------------------------------------------------------
 
 
-
-
 *=========================================================================================
 *	QUESTIONNAIRE SCORING 
 *=========================================================================================
@@ -463,7 +449,6 @@ gen metro_melb =.
 	* tab QS41_walk_vigorously
 	* tab2 QS41_walk_moderate QS41_walk_vigorously
 	* tab twin_ID_n
-
 	* Recode to estimate minutes per week. 
 	* Moderate Exercise
 			gen modexercise_mins =.
@@ -484,8 +469,7 @@ gen metro_melb =.
 			replace vigexercise_mins=80 if QS41_walk_vigorously==4
 			replace vigexercise_mins=100 if QS41_walk_vigorously==5
 			replace vigexercise_mins=120 if QS41_walk_vigorously==6
-			replace vigexercise_mins=140 if QS41_walk_vigorously==7
-			
+			replace vigexercise_mins=140 if QS41_walk_vigorously==7	
 	*----------------------------------------------------------*/	
 		* browse
 		* tab modexercise_mins
@@ -506,8 +490,7 @@ gen metro_melb =.
 		label values PA_status PA_status_label 
 	*----------------------------------
 		tab PA_status 		// Poor = 336, Intermediate = 449, Optimal = 337
-		
-		
+			
 		gen PA_status_rev =.
 		replace PA_status_rev=2 if (modexercise_mins<60 & vigexercise_mins<20)
 		replace PA_status_rev=1 if inrange(modexercise_mins,60,149) | inrange(vigexercise_mins,20,74)
@@ -532,7 +515,6 @@ gen metro_melb =.
 	*----------------------------------
 		tab PA_change 		// Poor = 336, Intermediate = 449, Optimal = 337
 
-		
 		gen PA_change_rev =.
 		replace PA_change_rev=2 if Q36_current_level_exercise==-2
 		replace PA_change_rev=2 if Q36_current_level_exercise==-1
@@ -544,8 +526,7 @@ gen metro_melb =.
 		label values PA_change_rev PA_change_rev_label 
 	*----------------------------------
 		tab PA_change_rev 		// Poor = 336, Intermediate = 449, Optimal = 337
-		
-		
+			
 *=========================================================================================
 *	SCORE DASS Subscales
 *=========================================================================================
@@ -624,8 +605,7 @@ gen DASS_depress = QS38_dassQ3_positive_feeling + QS38_dassQ5_initiative_diff + 
 * Number of days participants drank alcohol over the past week. 
 * 0 days = 1, 1-2 days = 2, 3-4 days = 3, 5-6 days = 4, every day = 5. 
 		tab QS47a_alcohol_days
-		* tab QS48_drinking
-		
+		* tab QS48_drinking	
 		*------------------------------------
 		* ALCOHOL CONSUMPTION LEVEL
 		gen alcohol_level =. 
@@ -650,7 +630,6 @@ gen DASS_depress = QS38_dassQ3_positive_feeling + QS38_dassQ5_initiative_diff + 
 		* Pre-COVID sleep comparison: QS43_sleep_comparison less = 1, the same = 2, more = 3
 		* tab QS43_sleep_comparison	
 		* list QS42_sleep_hours QS42_sleep_minutes total_sleep_time // check - good
-	
 		*------------------------------------
 		* SLEEP LEVEL
 		gen sleep_level =. 
@@ -661,7 +640,6 @@ gen DASS_depress = QS38_dassQ3_positive_feeling + QS38_dassQ5_initiative_diff + 
 		label define sleep_level 1 "Inadequate" 2 "Adequate" 
 		label values sleep_level sleep_level_label 
 		tab sleep_level
-		
 /*-----------------------------------------------------------------------------------------
 	Social & Emotional Loneliness Questionnaire
 ----------------------------------------------------------------------------------------
@@ -718,10 +696,7 @@ ITEMS: 1. QS30_feel_emptiness, 2. QS30_people_to_rely_on, 3. QS30_people_can_tru
 		gen loneliness_total =.
 		replace loneliness_total= loneliness_1 + loneliness_2 + loneliness_3 + loneliness_4 + loneliness_5 + loneliness_6
 	* tab loneliness_total
-
-*---------------------------------------------------------------------------------------
-*---------------------------------------------------------------------------------------			
-
+			
 /*---------------------------------------------------------------------------------------
 // Testing Linearity Assumption
 Continuous exposures and binary mod-sev depression outcome
@@ -753,7 +728,6 @@ estimates store model1
 logistic  depression_mod c.loneliness_total##c.loneliness_total		
 estimates store model2
 lrtest model1 model2
-
 *=========================================================================================
 *	MISSING DATA TREATMENT
 *==========================================================================================*
@@ -767,8 +741,6 @@ lrtest model1 model2
 	misschk total_sleep_time		// 
 	misschk loneliness_total		// 
 	misschk lockdown_bin			// 
-
-*=========================================================================================
 *-----------------------------------------------------------------------------------------
 * Missingness
 *----------------------------------------------------------------------------------------*/
@@ -796,7 +768,8 @@ keep if nmis_completecase == 0
 					
 tab twin_ID_n		// Check even count of twin 1 and twin 2 --> yes, 601 pairs
 tab pair_ID_n		// 1202 participants remain
-*------------------------------------*/
+
+
 /*=========================================================================================
 	DESCRIPTIVE STATISTICS
 ==========================================================================================*/
@@ -877,8 +850,6 @@ tab pair_ID_n		// 1202 participants remain
 *--------------------------------------------------------------------------------	
 * MENTAL HEALTH
 *--------------------------------------------------------------------------------		
-* CHECK: Q36_current_mental_health
-	* Depression  - Numerical Interval
 		histogram DASS_depress, frequency 							// Positively Skewed
 		tabstat DASS_depress, stat(n median iqr p25 p75)		
 		tab depression_cat
@@ -893,16 +864,6 @@ tab pair_ID_n		// 1202 participants remain
 		
 		prtesti 924 0.8539 222 0.9009
 		prtesti 924 0.1461 222 0.0991
-
-*--------------------------------------------------------------------------------
-*** LOCKDOWN
-*--------------------------------------------------------------------------------
-	* Lockdown
-		tab lockdown_days
-		histogram lockdown_days, freq 
-		twoway histogram lockdown_days, discrete by(db_gender)		// Not Normally distributed
-		tabstat lockdown_days, by(db_gender) stat(n median p25 p75)
-		ttest lockdown_days, by (db_gender)
 	
 *--------------------------------------------------------------------------------*/
 *** CONFOUNDERS: PSYCHOSOCIAL SUPPORT
@@ -965,10 +926,8 @@ tab pair_ID_n		// 1202 participants remain
 		tab2 alcohol_level db_gender, col
 		prtesti 917 0.3817 220 0.2182
 		prtesti 917 0.4460 220 0.5455
-		prtesti 917 0.1723 220 0.2364
-*--------------------------------------------------------------------------------			
-*================================================================================		
-*--------------------------------------------------------------------------------		
+		prtesti 917 0.1723 220 0.2364	
+*================================================================================				
 * ASSOCIATIONS BETWEEN PA and MENTAL HEALTH
 *--------------------------------------------------------------------------------
 	graph box modexercise_mins, over(depression_cat) box(1, fcolor(ltblue)) b1title("Depression", size(medium))
@@ -986,8 +945,6 @@ tab pair_ID_n		// 1202 participants remain
 	graph box DASS_depress, over(PA_status) box(1, fcolor(ltblue)) b1title("PA_Status", size(medium))
 	graph box DASS_anxiety, over(PA_status) box(1, fcolor(ltblue)) b1title("PA_Status", size(medium))
 *--------------------------------------------------------------------------------
-*================================================================================
-*---------------------------------------------------------------------------------------
 *	CORRELATIONS --> APPENDICES
 *----------------------------------------------------------------------------------------
 *----------------------------------------------------------------------------------------
@@ -1098,7 +1055,6 @@ logistic depression_mod i.lockdown_bin
 *--------------------------------------*/
 *		EXPOSURE	PA_Change, OUTCOME: MOD-SEV DEPRESSION
 *--------------------------------------*	
-
 * PA Change such that 0 "Worsened" 1 "Stayed the same" 2 "Improved"
 logistic depression_mod i.PA_change age db_gender BMI i.sleep_level i.alcohol_level i.current_smoker loneliness_total i.lockdown_bin
 	* Univariates
@@ -1111,7 +1067,6 @@ logistic depression_mod i.PA_change age db_gender BMI i.sleep_level i.alcohol_le
 	logistic depression_mod i.current_smoker 
 	logistic depression_mod loneliness_total
 	logistic depression_mod i.lockdown_bin
-
 
 * Reverse levels on PA Change such that 0 "Improved" 1 "Stayed the same" 2 "Worsened"
 logistic depression_mod i.PA_change_rev age db_gender BMI i.sleep_level i.alcohol_level i.current_smoker loneliness_total i.lockdown_bin
@@ -1126,7 +1081,6 @@ logistic depression_mod i.PA_change_rev age db_gender BMI i.sleep_level i.alcoho
 	logistic depression_mod loneliness_total
 	logistic depression_mod i.lockdown_bin
 *=========================================================================================
-/*-------------------------------------------------------------------------------------
  	MODEL 2: EFFECT MODIFICATION: PA_Status
 *--------------------------------------*/
 *		Model Estimation
@@ -1221,9 +1175,7 @@ sort pair_ID_n twin_ID_n
 		* Mean vig_ex for each twin-pair
 		by pair_ID_n: egen mvpa_mins_mn = sum(mvpa_mins) 
 		replace mvpa_mins_mn=mvpa_mins_mn/2
-		tab mvpa_mins_mn		// No missing values
-	
-		
+		tab mvpa_mins_mn		// No missing values		
 * CONFOUNDERS: Physical Health/ Lifestyle Behaviours
 	* Mean BMI for each twin-pair
 		by pair_ID_n: egen BMI_mn = sum(BMI) 
@@ -1308,7 +1260,6 @@ sort pair_ID_n twin_ID_n
 * CONFOUNDERS: LOCKDOWN CATEGORY FOR EM
 	*  lockdown_bin
 		generate lockdown_bin_d=lockdown_bin-lockdown_bin_mn
-	
 *-----------------------------------------------------------------------------------------
 * STAGE 3: Difference from mean
 *-----------------------------------------------------------------------------------------
@@ -1322,8 +1273,6 @@ sort pair_ID_n twin_ID_n
 	by pair_ID_n: generate modexercise_mins_dif=modexercise_mins[_n]-modexercise_mins[_n-1] 
 * Vig_ex within-pair difference
 	by pair_ID_n: generate vigexercise_mins_dif=vigexercise_mins[_n]-vigexercise_mins[_n-1] 	
-*=========================================================================================
-
 
 /*=========================================================================================
 	CONFOUNDER ASSESSMENT
@@ -1357,22 +1306,22 @@ sort pair_ID_n twin_ID_n
 * 		CONFOUNDER ASSESSMENT		MALE-ONLY PAIRS	
 *-------------------------------------------------------------------------------------
 * Outcome 1: DASS_depress_dif
-	reg DASS_depress_dif age if db_gender==1, nocons						//
-	reg DASS_depress_dif BMI_d if db_gender==1, nocons						// 
-	reg DASS_depress_dif alcohol_days_d if db_gender==1, nocons				// 
+	reg DASS_depress_dif age if db_gender==1, nocons				//
+	reg DASS_depress_dif BMI_d if db_gender==1, nocons				// 
+	reg DASS_depress_dif alcohol_days_d if db_gender==1, nocons			// 
 	reg DASS_depress_dif current_smoker_d if db_gender==1, nocons 			// 
 	reg DASS_depress_dif total_sleep_time_d if db_gender==1, nocons			// 
 	reg DASS_depress_dif loneliness_total_d if db_gender==1, nocons			// 
 * Exposure 2: modexercise_mins_d
-	reg modexercise_mins_d age if db_gender==1, nocons						// 
-	reg modexercise_mins_d BMI_d if db_gender==1, nocons					// 
+	reg modexercise_mins_d age if db_gender==1, nocons				// 
+	reg modexercise_mins_d BMI_d if db_gender==1, nocons				// 
 	reg modexercise_mins_d alcohol_days_d if db_gender==1, nocons			// 
 	reg modexercise_mins_d current_smoker_d if db_gender==1, nocons 		// 
 	reg modexercise_mins_d total_sleep_time_d if db_gender==1, nocons		// 
 	reg modexercise_mins_d loneliness_total_d if db_gender==1, nocons		//
 * Exposure 3: vigexercise_mins_d
-	reg vigexercise_mins_d age if db_gender==1, nocons						//
-	reg vigexercise_mins_d BMI_d if db_gender==1, nocons					// 
+	reg vigexercise_mins_d age if db_gender==1, nocons				//
+	reg vigexercise_mins_d BMI_d if db_gender==1, nocons				// 
 	reg vigexercise_mins_d alcohol_days_d if db_gender==1, nocons			// 
 	reg vigexercise_mins_d current_smoker_d if db_gender==1, nocons 		// 
 	reg vigexercise_mins_d total_sleep_time_d if db_gender==1, nocons		// 
@@ -1390,7 +1339,6 @@ reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d to
 * All covars: loneliness only
 reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d total_sleep_time_d loneliness_total_d lockdown_bin_d if db_gender==2, nocons
 *=========================================================================================
-
 *-------------------------------------------------------------------------------------*/
  * 	MALE ONLY PAIRS --- EXPOSURE: modexercise_mins_d
 *-------------------------------------------------------------------------------------*/	
@@ -1398,32 +1346,7 @@ reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d to
 reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d total_sleep_time_d loneliness_total_d   if db_gender==1, nocons
 * All covars: loneliness only
 reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d total_sleep_time_d loneliness_total_d lockdown_bin_d if db_gender==1, nocons
-
 *=========================================================================================
-
-
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-
-
-
-
-
-
-
-
-
-
-
-
 
 *---------------------------------------------------------------------------------------
 *	 SENSITVITY ANALYSES
@@ -1431,7 +1354,6 @@ reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d to
 /*---------------------------------------------------------------------------------------
 Sensitivity Analysis 1: Exclude over 65s
 -----------------------------------------------------------------------------------------*/
-*----------------------------------------------------------------------------------------
 * Exclude if over 65. 
 	* tab age		
 keep if age <66		
@@ -1439,7 +1361,6 @@ keep if age <66
 	tab2 twin_ID_n sex_sex			// 356 FF pairs, 68 MM pairs
 	tab2 twin_ID_n db_zyg			// 455 MZ pairs, 106 DZ pairs
 	sum age							// 18- 65, Mean = 46.34, SD = 13.04
-	
 *-------------------------------------------------*/
 * 	MODEL 1: MULTIVARIABLE LINEAR REGRESSION
 	* a) PA_Status
@@ -1581,43 +1502,6 @@ reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d to
 reg DASS_depress_dif modexercise_mins_d BMI_d alcohol_days_d current_smoker_d total_sleep_time_d loneliness_total_d lockdown_bin_d if db_gender==1, nocons
 *=========================================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-*==========================================================================================	
-
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
  
 /*---------------------------------------------------------------------------------------
 Sensitivity Analysis 2: Identical Pairs Only
